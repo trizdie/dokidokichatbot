@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+  <title>DDLC Chatbot</title>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ==================== NAME INPUT POPUP ==================== -->
+  <!-- Matches DDLC's name_input screen: "Please enter your name" -->
+  <div id="name-popup-overlay">
+    <div id="name-popup">
+      <h2>Please enter your name</h2>
+      <input type="text" id="name-input" placeholder="Your name" maxlength="15" autocomplete="off">
+      <br>
+      <button class="popup-btn" id="name-ok-btn">OK</button>
+    </div>
+  </div>
+
+  <!-- ==================== CHARACTER SELECT ==================== -->
+  <!-- "Who do you want to talk to?" — left-aligned names, 2×2 grid -->
+  <div id="character-select" class="ddlc-panel" style="display: none;">
+    <h2>Who do you want to talk to?</h2>
+    <div class="character-grid">
+      <button class="character-btn" data-char="sayori">Sayori</button>
+      <button class="character-btn" data-char="natsuki">Natsuki</button>
+      <button class="character-btn" data-char="yuri">Yuri</button>
+      <button class="character-btn" data-char="monika">Monika</button>
+    </div>
+    <button class="ddlc-back-btn" id="select-back-btn">Back</button>
+  </div>
+
+  <!-- ==================== CHAT INTERFACE ==================== -->
+  <div id="chat-container">
+    <!-- Chat messages scroll area — above the textbox -->
+    <div id="chat-log"></div>
+
+    <!-- DDLC-style textbox with dialogue and namebox -->
+    <div class="ddlc-textbox" id="ddlc-textbox" style="display: none;">
+      <div class="ddlc-namebox" id="ddlc-namebox"></div>
+      <div class="ddlc-dialogue" id="ddlc-dialogue"></div>
+    </div>
+
+    <!-- CTC "OK" button — pink/mauve, bold white text -->
+    <div class="ctc-container" id="ctc-container" style="display: none;">
+      <button class="ctc-button" id="ctc-button">OK</button>
+    </div>
+
+    <!-- User input bar -->
+    <div class="input-container" id="input-area">
+      <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off">
+      <button id="send-button">
+        <i class="fa-solid fa-paper-plane" id="button-icon"></i>
+      </button>
+    </div>
+
+    <!-- Quick menu — matches DDLC's quick_menu -->
+    <div class="quick-menu">
+      <button class="quick-btn" id="log-btn">Log</button>
+      <button class="quick-btn" id="clear-btn">Clear</button>
+      <button class="quick-btn" id="back-btn">Back</button>
+    </div>
+  </div>
+
+  <!-- ==================== CHAT LOG PANEL ==================== -->
+  <!-- "Chat Log" panel with close button -->
+  <div id="chat-log-panel" class="ddlc-panel">
+    <h2>Chat Log</h2>
+    <div class="log-content" id="log-content"></div>
+    <button class="ddlc-back-btn" id="log-close-btn">Close</button>
+  </div>
+
+</div>
+
+<script src="index.js"></script>
+<script src="adapter.js"></script>
+</body>
+</html>

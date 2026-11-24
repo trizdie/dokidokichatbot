@@ -1,0 +1,26 @@
+# --- Secrets and local config (never commit these) ---
+chatbot/.env
+.env
+*.env.local
+
+# --- Agent / editor scratch ---
+.cloud-attachments/
+.freebuff/
+.probe/
+
+# --- Python ---
+__pycache__/
+*.pyc
+*.pyo
+
+# --- DDLC engine download (971 MB; get it from Team Salvato) ---
+DDLC-1.1.1-dists/
+
+# --- Ren'Py runtime junk ---
+ddlc-renpy-project/saves/
+ddlc-renpy-project/game/saves/
+ddlc-renpy-project/game/cache/
+ddlc-renpy-project/log.txt
+ddlc-renpy-project/traceback.txt
+ddlc-renpy-project/errors.txt
+chatbot/flask.log

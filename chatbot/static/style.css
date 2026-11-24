@@ -1,0 +1,594 @@
+/* ===================================================================
+   DDLC Chatbot — Exact DDLC colors, fonts, and layout
+   
+   Key DDLC values from gui.rpy:
+     accent_color = '#ffffff'
+     text_color = '#ffffff'
+     hover_color = '#cc6699'
+     selected_color = '#bb5588'
+     idle_color = '#aaaaaa'
+     idle_small_color = '#333'
+     muted_color = '#6666a3'
+     default_font = "gui/font/Aller_Rg.ttf"
+     name_font = "gui/font/RifficFree-Bold.ttf"
+     text_size = 26
+     name_text_size = 26
+     textbox_height = 182
+     textbox_yalign = 0.99
+     name_xpos = 350, name_ypos = -3, name_xalign = 0.5
+     namebox_borders = Borders(5, 5, 5, 2)
+     dialogue_xpos = 240, dialogue_ypos = 43, dialogue_width = 804
+     confirm_frame_borders = Borders(40, 40, 40, 40)
+   =================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Fredoka+One&display=swap');
+
+:root {
+  /* DDLC confirm dialog colors */
+  --ddlc-bg-panel: #fff5f8;
+  --ddlc-border-panel: #fcc8dc;
+  --ddlc-bg-overlay: rgba(255, 240, 248, 0.92);
+  
+  /* DDLC text colors */
+  --ddlc-text-black: #000000;
+  --ddlc-text-white: #ffffff;
+  --ddlc-hover-pink: #cc6699;
+  --ddlc-selected-pink: #bb5588;
+  --ddlc-idle-gray: #aaaaaa;
+  --ddlc-muted-gray: #666666;
+  
+  /* DDLC textbox */
+  --ddlc-textbox-bg: rgba(255, 245, 250, 0.95);
+  --ddlc-textbox-border: #fcc8dc;
+  --ddlc-name-bg: #fcc8dc;
+  
+  /* CTC button */
+  --ddlc-ctc-bg: #d4a0b8;
+  --ddlc-ctc-hover: #b88098;
+  --ddlc-ctc-shadow: #b55599;
+  
+  /* DDLC character signature colors */
+  --color-sayori: #fcacce;
+  --color-natsuki: #ffaacc;
+  --color-yuri: #9999ff;
+  --color-monika: #7fba5c;
+  --color-player: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  /* DDLC's pink polka-dot background — large circles like the original */
+  font-family: 'Nunito', 'Aller', Arial, sans-serif;
+  background-color: #fff5f8;
+  background-image:
+    radial-gradient(circle, #f0d0e0 14px, transparent 14px);
+  background-size: 70px 70px;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ===================== CONTAINER ===================== */
+.container {
+  width: 100%;
+  max-width: 800px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ===================== HEADER / INFO (hidden) ===================== */
+.header, .info { display: none; }
+
+/* ===================== DDLC PANEL (shared for char select, log, name) ===================== */
+.ddlc-panel {
+  /* Uses DDLC's confirm_frame style: gui/confirm_frame.png with Borders(40,40,40,40) */
+  background-color: var(--ddlc-bg-panel);
+  border: 2px solid var(--ddlc-border-panel);
+  border-radius: 2px;
+  padding: 50px 40px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  position: relative;
+}
+
+.ddlc-panel h2 {
+  /* confirm_prompt_text: color #000, no outlines, centered */
+  font-family: 'Nunito', Arial, sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--ddlc-text-black);
+  margin-bottom: 40px;
+  text-align: center;
+  text-shadow: none;
+}
+
+/* ===================== CHARACTER SELECT ===================== */
+#character-select {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#character-select h2 {
+  margin-bottom: 50px;
+}
+
+/* 2×2 grid — character names LEFT-aligned like the screenshot */
+.character-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 120px;
+  margin-bottom: 50px;
+  width: 100%;
+  max-width: 500px;
+}
+
+/* Character button — left-aligned bold black text */
+.character-btn {
+  background: none;
+  border: none;
+  font-family: 'Nunito', Arial, sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--ddlc-text-black);
+  cursor: pointer;
+  padding: 8px 12px;
+  transition: color 0.2s;
+  text-align: left;
+  text-shadow: none;
+}
+
+.character-btn:hover {
+  color: var(--ddlc-hover-pink);
+}
+
+/* ===================== BACK / CLOSE BUTTONS ===================== */
+/* Matches DDLC's insensitive_color #666666, hover #444444 */
+.ddlc-back-btn {
+  background: none;
+  border: none;
+  font-family: 'Nunito', Arial, sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ddlc-muted-gray);
+  cursor: pointer;
+  padding: 10px 30px;
+  transition: color 0.2s;
+  text-shadow: none;
+}
+
+.ddlc-back-btn:hover {
+  color: #333;
+}
+
+/* ===================== CHAT INTERFACE ===================== */
+#chat-container {
+  display: none;
+  flex-direction: column;
+  height: 100vh;
+  position: relative;
+  /* Same polka-dot background */
+  background-color: #fff5f8;
+  background-image:
+    radial-gradient(circle, #f0d0e0 14px, transparent 14px);
+  background-size: 70px 70px;
+}
+
+/* Chat message scroll area — above the textbox */
+#chat-log {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 30px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* ===================== DDLC TEXTBOX (Dialogue) ===================== */
+/* Matches DDLC's window style: xfill, yalign 0.99, ysize 182 */
+.ddlc-textbox {
+  position: relative;
+  width: 100%;
+  /* DDLC uses gui/textbox.png — we simulate with pink overlay */
+  background-color: var(--ddlc-textbox-bg);
+  border-top: 2px solid var(--ddlc-textbox-border);
+  border-bottom: 2px solid var(--ddlc-textbox-border);
+  border-radius: 0;
+  padding: 25px 30px 20px;
+  min-height: 140px;
+  margin-top: auto;
+  cursor: pointer;
+}
+
+/* Namebox — matches DDLC's namebox style:
+   xpos 350, ypos -3, namebox_borders(5,5,5,2), 
+   background gui/namebox.png, RifficFree-Bold font */
+.ddlc-namebox {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ddlc-name-bg);
+  color: var(--ddlc-text-white);
+  /* RifficFree-Bold — we use Fredoka One as web equivalent */
+  font-family: 'Fredoka One', 'RifficFree-Bold', cursive;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 4px 20px;
+  border-radius: 2px;
+  text-shadow:
+    1px 1px 0 var(--ddlc-ctc-shadow),
+    -1px -1px 0 var(--ddlc-ctc-shadow),
+    1px -1px 0 var(--ddlc-ctc-shadow),
+    -1px 1px 0 var(--ddlc-ctc-shadow);
+  z-index: 2;
+  white-space: nowrap;
+}
+
+/* Dialogue text — centered like DDLC (text_align 0.5) */
+.ddlc-dialogue {
+  font-family: 'Nunito', 'Aller', Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.6;
+  color: var(--ddlc-text-black);
+  min-height: 50px;
+  margin-top: 15px;
+  text-align: center;
+  padding: 0 40px;
+}
+
+/* ===================== CTC INDICATOR ===================== */
+/* CTC container — positioned inside/below textbox */
+.ctc-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
+  min-height: 55px;
+  background-color: var(--ddlc-bg-panel);
+}
+
+/* CTC "OK" button — matches the screenshot:
+   Pink/mauve background, white bold text, rounded */
+.ctc-button {
+  background: var(--ddlc-ctc-bg);
+  border: none;
+  border-radius: 8px;
+  color: var(--ddlc-text-white);
+  /* RifficFree-Bold style */
+  font-family: 'Fredoka One', 'RifficFree-Bold', cursive;
+  font-size: 26px;
+  font-weight: 700;
+  padding: 8px 50px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+  animation: ctc-pulse 1.5s ease-in-out infinite;
+  user-select: none;
+  text-shadow:
+    2px 2px 0 var(--ddlc-ctc-shadow),
+    -1px -1px 0 var(--ddlc-ctc-shadow),
+    1px -1px 0 var(--ddlc-ctc-shadow),
+    -1px 1px 0 var(--ddlc-ctc-shadow);
+  letter-spacing: 1px;
+}
+
+.ctc-button:hover {
+  background: var(--ddlc-ctc-hover);
+  transform: scale(1.05);
+}
+
+.ctc-button:active {
+  transform: scale(0.95);
+}
+
+@keyframes ctc-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.65; }
+}
+
+/* ===================== INPUT AREA ===================== */
+.input-container {
+  display: flex;
+  padding: 12px 15px;
+  background-color: var(--ddlc-bg-panel);
+  border-top: 2px solid var(--ddlc-textbox-border);
+  gap: 10px;
+  align-items: center;
+}
+
+#user-input {
+  flex: 1;
+  background-color: #fff;
+  border: 2px solid var(--ddlc-border-panel);
+  border-radius: 4px;
+  padding: 10px 15px;
+  font-family: 'Nunito', Arial, sans-serif;
+  font-size: 15px;
+  color: var(--ddlc-text-black);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+#user-input:focus {
+  border-color: var(--ddlc-hover-pink);
+}
+
+#user-input::placeholder {
+  color: #c8a0b0;
+  font-weight: 400;
+}
+
+#send-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--ddlc-ctc-bg);
+  color: var(--ddlc-text-white);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: 'Nunito', Arial, sans-serif;
+  transition: background-color 0.2s;
+}
+
+#send-button:hover {
+  background-color: var(--ddlc-ctc-hover);
+}
+
+#send-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===================== CHAT LOG PANEL ===================== */
+#chat-log-panel {
+  display: none;
+}
+
+#chat-log-panel .log-content {
+  flex: 1;
+  overflow-y: auto;
+  width: 100%;
+  padding: 10px 20px;
+  max-height: 60vh;
+}
+
+.log-entry {
+  margin-bottom: 12px;
+  padding: 8px 12px;
+}
+
+.log-entry .log-name {
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--ddlc-hover-pink);
+  margin-bottom: 2px;
+}
+
+.log-entry .log-text {
+  font-size: 15px;
+  color: var(--ddlc-text-black);
+  line-height: 1.5;
+}
+
+/* ===================== QUICK MENU ===================== */
+/* Matches DDLC's quick menu: idle #522, hover #fcc */
+.quick-menu {
+  display: flex;
+  justify-content: center;
+  gap: 25px;
+  padding: 8px 0;
+  background-color: var(--ddlc-bg-panel);
+  border-top: 1px solid var(--ddlc-border-panel);
+}
+
+.quick-btn {
+  background: none;
+  border: none;
+  font-family: 'Nunito', Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #552233;
+  cursor: pointer;
+  padding: 4px 14px;
+  transition: color 0.2s;
+}
+
+.quick-btn:hover {
+  color: #ffccdd;
+}
+
+/* ===================== MESSAGE BUBBLES ===================== */
+.chat-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 0;
+}
+
+.chat-message.user-message {
+  flex-direction: row-reverse;
+}
+
+.chat-message .msg-sender {
+  font-weight: 700;
+  font-size: 14px;
+  min-width: 60px;
+  font-family: 'Fredoka One', 'RifficFree-Bold', cursive;
+}
+
+.chat-message .msg-bubble {
+  background-color: var(--ddlc-bg-panel);
+  border: 1px solid var(--ddlc-border-panel);
+  border-radius: 4px;
+  padding: 10px 14px;
+  max-width: 70%;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--ddlc-text-black);
+  position: relative;
+}
+
+.user-message .msg-sender {
+  color: var(--ddlc-idle-gray);
+  text-align: right;
+}
+
+.bot-message .msg-sender {
+  color: var(--ddlc-hover-pink);
+}
+
+/* ===================== LOADING DOTS ===================== */
+.loading-dots {
+  display: flex;
+  gap: 4px;
+  padding: 4px 0;
+}
+
+.loading-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--ddlc-border-panel);
+  animation: dot-bounce 1.4s ease-in-out infinite;
+}
+
+.loading-dots span:nth-child(2) { animation-delay: 0.2s; }
+.loading-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes dot-bounce {
+  0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+/* ===================== NAME INPUT POPUP ===================== */
+/* Matches DDLC's name_input screen: confirm overlay + confirm_frame */
+#name-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* DDLC's gui/overlay/confirm.png */
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+#name-popup {
+  background-color: var(--ddlc-bg-panel);
+  border: 2px solid var(--ddlc-border-panel);
+  border-radius: 2px;
+  padding: 50px 60px 40px;
+  text-align: center;
+  min-width: 380px;
+}
+
+#name-popup h2 {
+  /* confirm_prompt_text: #000, no outlines, centered */
+  font-family: 'Nunito', Arial, sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ddlc-text-black);
+  margin-bottom: 30px;
+  text-align: center;
+  text-shadow: none;
+}
+
+#name-popup input {
+  width: 100%;
+  padding: 10px 15px;
+  font-family: 'Nunito', Arial, sans-serif;
+  font-size: 16px;
+  border: 2px solid var(--ddlc-border-panel);
+  border-radius: 2px;
+  outline: none;
+  color: var(--ddlc-text-black);
+  background: #fff;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+#name-popup input:focus {
+  border-color: var(--ddlc-hover-pink);
+}
+
+#name-popup .popup-btn {
+  /* OK button styled like confirm_button */
+  background: var(--ddlc-ctc-bg);
+  border: none;
+  border-radius: 4px;
+  color: var(--ddlc-text-white);
+  font-family: 'Nunito', Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 10px 50px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  text-shadow: none;
+}
+
+#name-popup .popup-btn:hover {
+  background: var(--ddlc-ctc-hover);
+}
+
+/* ===================== SCROLLBAR ===================== */
+#chat-log::-webkit-scrollbar,
+.log-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+#chat-log::-webkit-scrollbar-track,
+.log-content::-webkit-scrollbar-track {
+  background: var(--ddlc-bg-panel);
+  border-radius: 4px;
+}
+
+#chat-log::-webkit-scrollbar-thumb,
+.log-content::-webkit-scrollbar-thumb {
+  background-color: var(--ddlc-border-panel);
+  border-radius: 4px;
+}
+
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 600px) {
+  .character-grid {
+    gap: 15px 40px;
+  }
+
+  .character-btn {
+    font-size: 18px;
+  }
+
+  .ddlc-textbox {
+    padding: 20px 15px 15px;
+  }
+
+  .ddlc-panel {
+    padding: 35px 20px 25px;
+  }
+
+  #name-popup {
+    min-width: 280px;
+    padding: 35px 25px 30px;
+  }
+}
