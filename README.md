@@ -9,12 +9,9 @@ You pick one of the four girls (Sayori, Natsuki, Yuri, Monika) and chat with her
 her sprite reacts emotionally to what you write (compliments make her happy, teasing makes
 her angry, insults make her sad, etc.) and she replies in character through an AI backend.
 
-> Secrets: the real API keys live only in `chatbot/.env` (gitignored). The committed
-> `chatbot/.env.example` has blank values. Never commit a filled `.env`.
-
 ---
 
-## English — How to use the chatbot
+## EN : How to use the chatbot
 
 ### 1. Prerequisites
 - Ren'Py SDK (or an installed copy of DDLC) to run `ddlc-renpy-project/`.
@@ -72,7 +69,7 @@ You should see `Chatbot running on http://localhost:5001`. Leave this terminal o
 
 ---
 
-## Português — Como usar o chatbot
+## PT : Como usar o chatbot
 
 ### 1. Pré-requisitos
 - Ren'Py SDK (ou uma cópia instalada de DDLC) para rodar `ddlc-renpy-project/`.
@@ -129,12 +126,6 @@ Você deve ver `Chatbot running on http://localhost:5001`. Deixe esse terminal a
 - Verificação de lint: `DDLC.exe <projeto> lint` deve reportar 0 erros.
 
 ---
-
-## Project layout
-- `ddlc-renpy-project/` — Ren'Py project (game scripts, sprites, UI).
-- `chatbot/` — Flask backend + original web frontend.
-- `chatbot/.env` — your secrets (gitignored). `chatbot/.env.example` — template.
-- The `oi/` folder and `README_RU.md` are intentionally excluded from the repository.
 
 ## License
 Decompiled sources are licensed under the MIT License and provided "AS IS". All rights reserved by Team Salvato.
