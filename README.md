@@ -1,67 +1,141 @@
 <div align="center">
  <img src="https://raw.githubusercontent.com/SecondThundeR/DokiDoki-RenPy/your-reality/readme_files/logos/ddlc_logo.png" width="256px" height="256px" alt="DDLC-Logo">
- <h1>Decompiled Doki Doki Literature Club (For Ren'Py Launcher use)</h1>
- <blockquote><b>Warning! These files contain many spoilers <i>(obviously)</i>. <br>If you haven't played DDLC yet for some reasons, I recommend you play this game first to get true emotions from walkthrough <i>(Believe me, it's worth it)</i></b></blockquote>
+ <h1>Doki Doki Literature Club — Ren'Py Chatbot Mod</h1>
+ <blockquote><b>Warning! These files contain many spoilers <i>(obviously)</i>. <br>If you haven't played DDLC yet, play the original game first to get the true experience.</b></blockquote>
 </div>
 
-This repository contains the decompiled sources of the latest version of the Doki Doki Literature Club (1.1.1) for using in Ren'Py Launcher *(e.g. making mods for DDLC)*
+This repository is a DDLC (1.1.1) decompiled project extended with an AI chatbot mod.
+You pick one of the four girls (Sayori, Natsuki, Yuri, Monika) and chat with her:
+her sprite reacts emotionally to what you write (compliments make her happy, teasing makes
+her angry, insults make her sad, etc.) and she replies in character through an AI backend.
 
-Decompiled sources are provided only for personal use, file analysis in order to gain experience in creating games on Ren'Py and creating modifications for DDLC. Creating standalone projects using DDLC sources is prohibited by Team Salvato [*(See "Fan Games" section in Team Salvato IP Guidelines)*](http://teamsalvato.com/ip-guidelines/)
+> Secrets: the real API keys live only in `chatbot/.env` (gitignored). The committed
+> `chatbot/.env.example` has blank values. Never commit a filled `.env`.
 
-**To view README in Russian, follow [this link](https://github.com/SecondThundeR/DokiDoki-RenPy/blob/your-reality/README_RU.md)**
+---
 
-## How to use sources
+## English — How to use the chatbot
 
-1. In Ren'Py Launcher, create a new project with any name
-2. Open the project folder and delete all files in it
-3. Move files from `ddlc-renpy-project` folder to the project folder
-4. Run the project in the launcher
-5. Make sure that the game starts without warnings or errors.
-6. Decompiled DDLC is now ready to use
+### 1. Prerequisites
+- Ren'Py SDK (or an installed copy of DDLC) to run `ddlc-renpy-project/`.
+- Python 3.9+ for the backend in `chatbot/`.
+- An API key for one provider (any one is enough):
+  - **Groq** (free): https://console.groq.com/keys — key starts with `gsk_`
+  - **OpenAI**: https://platform.openai.com/api-keys — key starts with `sk-`
+  - **RapidAPI**: requires an active subscription.
 
-## How to enable developer tools
+### 2. Configure the backend
+```bash
+cd chatbot
+python -m venv venv
+# Windows:
+venv\Scripts\activate
+# macOS/Linux:
+source venv/bin/activate
 
-To enable developer tools, go to the file `definitions.rpy` in the `game` folder and change the value of `config.developer` from `False` to `True` *(Don't forget to change this back to `False` before compiling the finished project)*
+pip install -r requirements.txt
 
-## What is each folder responsible for
+cp .env.example .env
+# Edit .env and paste at least one key. Example (Groq, free):
+#   GROQ_API_KEY=gsk_...
+#   GROQ_MODEL=openai/gpt-oss-20b
+#   PORT=5001
+```
 
-### Repository folder
+You can also tune the model in `ddlc-renpy-project/game/chatbot_config.py`
+(`USE_LOCAL`, `LOCAL_API_URL`, `MODEL`, `MAX_TOKENS`, `TEMPERATURE`).
 
-- `characters` - folder of characters files *(Moved out from `game` folder so the game can see this files and manipulate them)*
-- `game` - main folder of Ren'Py project *(and compiled game too)*
+### 3. Start the backend
+```bash
+python app.py
+```
+You should see `Chatbot running on http://localhost:5001`. Leave this terminal open.
 
-### game folder
+### 4. Run the game
+1. Open the Ren'Py Launcher.
+2. Point it at the `ddlc-renpy-project/` folder (or create a project and copy its contents in).
+3. Launch the project.
+4. On first run, type your name and press OK.
+5. Choose a girl from the character selection screen.
 
-- `bgm`, `sfx`, `gui/sfx` - folders with music, SFX and ambient sounds
-- `gui` - images for UI *(Contains lot of pictures that not suitable for people who are easily disturbed. Pictures with spoilers are also present)*
-- `images` - images of game *(Contains lot of pictures that not suitable for people who are easily disturbed. Pictures with spoilers are also present)*
-- `python-packages` - folder of Python libraries and packages *(Contains `singleton` library that game rely on)*
+### 5. Chat
+- Type your message in the input box (top-left of the dialogue panel) and press **Enter** or click **Send**.
+- Your line appears first, then her AI reply appears automatically (the “next” arrow shows up once it’s ready).
+- Click the **next arrow** (▶) to dismiss the reply and get the input back. Her expression returns to neutral.
+- **Log** opens the chat history; **Clear** wipes the conversation; **Back** returns to character selection.
+- Her sprite changes while chatting: compliments → happy, teasing → angry, insults/mockery → sad, etc.
 
-## How to compile the mod and apply it in the original DDLC
+### 6. Troubleshooting
+- “No API key configured…” → fill `chatbot/.env` and restart `app.py`.
+- Backend not reachable → make sure `app.py` is running on the port in `chatbot_config.py` (`LOCAL_API_URL`).
+- Lint check: `DDLC.exe <project> lint` should report 0 errors.
 
-1. In Ren'Py Launcher, go to `"Build Distributions"`
-2. Choose the OS on which you want to build the modification
-3. Wait for the compilation to finish
-4. After compilation, unzip the archive and open `game` folder
-5. Copy all files with the extension .rpa from your mod to DDLC files and accept all file changes
-6. Open the game and check the compatibility of your changes in the source
+---
 
-## DDLC Mod Distribution Information
+## Português — Como usar o chatbot
 
-According to [Team Salvato IP Guidelines](http://teamsalvato.com/ip-guidelines/), modifications should be distributed as files with the extension .rpa and contain files that are necessary for installing the modification *(In most cases, this is just a scripts.rpa file or other files (if you replaced the graphics/fonts/audio in the game)*. Any modifications must **NOT** be distributed as a complete or standalone game and should only be installed on the existing official DDLC game installed on the user's computer
+### 1. Pré-requisitos
+- Ren'Py SDK (ou uma cópia instalada de DDLC) para rodar `ddlc-renpy-project/`.
+- Python 3.9+ para o backend em `chatbot/`.
+- Uma chave de API de um provedor (qualquer um basta):
+  - **Groq** (grátis): https://console.groq.com/keys — chave começa com `gsk_`
+  - **OpenAI**: https://platform.openai.com/api-keys — chave começa com `sk-`
+  - **RapidAPI**: requer assinatura ativa.
 
-## Screenshots
+### 2. Configurar o backend
+```bash
+cd chatbot
+python -m venv venv
+# Windows:
+venv\Scripts\activate
+# macOS/Linux:
+source venv/bin/activate
 
-<div align="center">
- <img src="https://raw.githubusercontent.com/SecondThundeR/DokiDoki-RenPy/your-reality/readme_files/screenshots/main_menu.png" alt="DDLC with edited name">
- <img src="https://raw.githubusercontent.com/SecondThundeR/DokiDoki-RenPy/your-reality/readme_files/screenshots/dev_menu.png" alt="Developer Tools Screenshot">
- <img src="https://raw.githubusercontent.com/SecondThundeR/DokiDoki-RenPy/your-reality/readme_files/screenshots/image_loc_picker.png" alt="Image Location Picker Screenshot">
-</div>
+pip install -r requirements.txt
+
+cp .env.example .env
+# Edite .env e cole pelo menos uma chave. Exemplo (Groq, grátis):
+#   GROQ_API_KEY=gsk_...
+#   GROQ_MODEL=openai/gpt-oss-20b
+#   PORT=5001
+```
+
+Você também pode ajustar o modelo em `ddlc-renpy-project/game/chatbot_config.py`
+(`USE_LOCAL`, `LOCAL_API_URL`, `MODEL`, `MAX_TOKENS`, `TEMPERATURE`).
+
+### 3. Iniciar o backend
+```bash
+python app.py
+```
+Você deve ver `Chatbot running on http://localhost:5001`. Deixe esse terminal aberto.
+
+### 4. Rodar o jogo
+1. Abra o Ren'Py Launcher.
+2. Aponte para a pasta `ddlc-renpy-project/` (ou crie um projeto e copie o conteúdo).
+3. Inicie o projeto.
+4. Na primeira execução, digite seu nome e pressione OK.
+5. Escolha uma das garotas na tela de seleção de personagem.
+
+### 5. Conversar
+- Digite sua mensagem na caixa de entrada (canto superior esquerdo do painel de diálogo) e pressione **Enter** ou clique em **Send**.
+- Sua fala aparece primeiro, depois a resposta da IA aparece automaticamente (a seta “próximo” aparece quando estiver pronta).
+- Clique na **seta de próximo** (▶) para dispensar a resposta e voltar a digitar. A expressão dela volta ao neutro.
+- **Log** abre o histórico da conversa; **Clear** apaga a conversa; **Back** volta à seleção de personagem.
+- O sprite dela muda enquanto conversa: elogios → feliz, provocações → brava, insultos/zombarias → triste, etc.
+
+### 6. Solução de problemas
+- “No API key configured…” → preencha `chatbot/.env` e reinicie `app.py`.
+- Backend inacessível → verifique se `app.py` está rodando na porta de `chatbot_config.py` (`LOCAL_API_URL`).
+- Verificação de lint: `DDLC.exe <projeto> lint` deve reportar 0 erros.
+
+---
+
+## Project layout
+- `ddlc-renpy-project/` — Ren'Py project (game scripts, sprites, UI).
+- `chatbot/` — Flask backend + original web frontend.
+- `chatbot/.env` — your secrets (gitignored). `chatbot/.env.example` — template.
+- The `oi/` folder and `README_RU.md` are intentionally excluded from the repository.
 
 ## License
-
-This decomplied sources is licensed under [MIT License](https://github.com/SecondThundeR/DokiDoki-RenPy/blob/your-reality/LICENSE) and it is provided "AS IS" without any warranties.
-
-All rights reserved by Team Salvato, which created DDLC
-
-Also thanks [Ren`Py](https://github.com/renpy/renpy), [unrpa](https://github.com/Lattyware/unrpa), [unrpyc](https://github.com/CensoredUsername/unrpyc) authors for great tools
+Decompiled sources are licensed under the MIT License and provided "AS IS". All rights reserved by Team Salvato.
+Also thanks to Ren'Py, unrpa and unrpyc authors.

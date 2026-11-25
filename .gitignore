@@ -16,7 +16,10 @@ __pycache__/
 # --- DDLC engine download (971 MB; get it from Team Salvato) ---
 DDLC-1.1.1-dists/
 
-# --- Ren'Py runtime junk ---
+# --- Excluded from repository ---
+oi/
+README_RU.md
+
 ddlc-renpy-project/saves/
 ddlc-renpy-project/game/saves/
 ddlc-renpy-project/game/cache/
